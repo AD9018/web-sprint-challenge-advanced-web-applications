@@ -1,14 +1,43 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useHistory } from "react-router-dom";
+
+const credentials = {
+  username: "",
+  password: "",
+};
 
 const Login = () => {
+  const [login, setLogin] = useState(credentials);
+  let history = useHistory();
+
   // make a post request to retrieve a token from the api
   // when you have handled the token, navigate to the BubblePage route
+  // useEffect(()=>{
+  // });
+  //   // make a post request to retrieve a token from the api
+  //   // when you have handled the token, navigate to the BubblePage route
 
-  useEffect(()=>{
-    // make a post request to retrieve a token from the api
-    // when you have handled the token, navigate to the BubblePage route
-  });
-  
+  const handleChange = (e) => {
+    setLogin({
+      ...login,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const submit = (e) => {
+    e.preventDefault();
+    axios
+      .post("http://localhost:5000/api/login", login)
+      .then((response) => {
+        localStorage.setItem("token", response.data.payload);
+        history.push("/bubblepage");
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
+
   const error = "";
   //replace with error state
 
@@ -16,10 +45,27 @@ const Login = () => {
     <div>
       <h1>Welcome to the Bubble App!</h1>
       <div data-testid="loginForm" className="login-form">
-        <h2>Build login form here</h2>
+        <form onSubmit={submit}>
+          <input
+            type="text"
+            name="username"
+            value={login.username}
+            onChange={handleChange}
+            placeholder="Username"
+          />
+          <input
+            type="password"
+            name="password"
+            value={login.password}
+            onChange={handleChange}
+            placeholder="Password"
+          />
+        </form>
+        <button>Login</button>
       </div>
-
-      <p data-testid="errorMessage" className="error">{error}</p>
+      <p data-testid="errorMessage" className="error">
+        {error}
+      </p>
     </div>
   );
 };
