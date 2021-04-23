@@ -19,9 +19,32 @@ const ColorList = ({ colors, updateColors }) => {
 
   const saveEdit = (e) => {
     e.preventDefault();
+    axiosWithAuth()
+      .get(`http://localhost:5000/api/colors/:${colorToEdit.id}`, colorToEdit)
+      .then(() => {
+        axiosWithAuth()
+          .get("http://localhost:5000/api/colors")
+          .then((response) => {
+            updateColors(response.data);
+          });
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
   };
 
-  const deleteColor = (color) => {};
+  const deleteColor = (color) => {
+    axiosWithAuth()
+      .delete(`http://localhost:5000/api/colors/${color.id}`)
+      .then((response) => {
+        updateColors(
+          colors.filter((colors) => colors.id !== Number(response.data))
+        );
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
+  };
 
   return (
     <div className="colors-wrap">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 
@@ -9,14 +9,8 @@ const credentials = {
 
 const Login = () => {
   const [login, setLogin] = useState(credentials);
+  const [error, setError] = useState();
   let history = useHistory();
-
-  // make a post request to retrieve a token from the api
-  // when you have handled the token, navigate to the BubblePage route
-  // useEffect(()=>{
-  // });
-  //   // make a post request to retrieve a token from the api
-  //   // when you have handled the token, navigate to the BubblePage route
 
   const handleChange = (e) => {
     setLogin({
@@ -36,9 +30,16 @@ const Login = () => {
       .catch((err) => {
         console.log(err.response);
       });
+    if (login.username === "" || login.password === "") {
+      setError("Fields must be complete");
+    } else if (
+      login.username !== "Lambda School" ||
+      login.password !== "i<3Lambd4"
+    ) {
+      setError("Incorrect Credentials");
+    }
   };
 
-  const error = "";
   //replace with error state
 
   return (
@@ -47,6 +48,7 @@ const Login = () => {
       <div data-testid="loginForm" className="login-form">
         <form onSubmit={submit}>
           <input
+            data-testid="username"
             type="text"
             name="username"
             value={login.username}
@@ -54,14 +56,15 @@ const Login = () => {
             placeholder="Username"
           />
           <input
+            data-testid="password"
             type="password"
             name="password"
             value={login.password}
             onChange={handleChange}
             placeholder="Password"
           />
+          <button>Login</button>
         </form>
-        <button>Login</button>
       </div>
       <p data-testid="errorMessage" className="error">
         {error}
