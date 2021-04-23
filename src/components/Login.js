@@ -24,7 +24,8 @@ const Login = () => {
     axios
       .post("http://localhost:5000/api/login", login)
       .then((response) => {
-        localStorage.setItem("token", response.data.payload);
+        console.log("HEY!!!", response.data.payload);
+        window.localStorage.setItem("token", response.data.payload);
         history.push("/bubblepage");
       })
       .catch((err) => {
@@ -40,7 +41,7 @@ const Login = () => {
     }
   };
 
-  //replace with error state
+  //replace with errconstor state
 
   return (
     <div>
